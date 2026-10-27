@@ -33,7 +33,7 @@ const countSpan     = document.getElementById('count');
 const emptyNote     = document.getElementById('emptyNote');
 const themeBtn      = document.getElementById('theme');
 
-// Quick console check that everything was found
+// Log them to the console to confirm they are all found
 console.log({
   form, nameInput, emailInput, passwordInput, confirmInput,
   genderSelect, dobInput, countryInput, phoneInput, bioTextarea,
@@ -43,7 +43,7 @@ console.log({
 });
 
 // ---------------------------------------------------------
-// Helper: show / clear a single field error
+// Helper functions
 // ---------------------------------------------------------
 function showError(inputEl, errorEl, message) {
   errorEl.textContent = message;
@@ -56,7 +56,7 @@ function clearError(inputEl, errorEl) {
 }
 
 // ---------------------------------------------------------
-// 5. Clear errors as the user fixes them (live feedback)
+// 5. Clear errors as the user fixes them
 // ---------------------------------------------------------
 const fields = [
   { input: nameInput,     error: nameError },
@@ -76,7 +76,7 @@ fields.forEach(({ input, error }) => {
 });
 
 // ---------------------------------------------------------
-// 4. Validate every field
+// 4. Validate each field (show messages in the matching .error span)
 // ---------------------------------------------------------
 function validateForm() {
   let isValid = true;
@@ -158,7 +158,7 @@ function validateForm() {
     isValid = false;
   }
 
-  // Bio (optional but if present, keep it reasonable)
+  // Bio
   if (bioTextarea.value.trim().length > 500) {
     showError(bioTextarea, bioError, 'Bio cannot exceed 500 characters');
     isValid = false;
@@ -168,11 +168,11 @@ function validateForm() {
 }
 
 // ---------------------------------------------------------
-// 6 + 7 + 8. Register member (DOM creation), update counter,
-//            show success message and reset form
+// 6. Register the member (DOM creation)
+// 7. Update the member counter
+// 8. Show the success message and reset
 // ---------------------------------------------------------
 function registerMember() {
-  // Create the list item
   const li = document.createElement('li');
   li.className = 'member-item';
 
@@ -188,7 +188,7 @@ function registerMember() {
   info.appendChild(strong);
   info.appendChild(span);
 
-  // Remove button
+  // 9. Remove a member
   const removeBtn = document.createElement('button');
   removeBtn.className = 'remove';
   removeBtn.type = 'button';
@@ -198,45 +198,32 @@ function registerMember() {
   li.appendChild(info);
   li.appendChild(removeBtn);
 
-  // Hide empty note and append the new member
   if (emptyNote) {
     emptyNote.classList.add('hidden');
   }
   memberList.appendChild(li);
 
-  // Update counter
   updateCounter();
 
-  // Success message
   successMsg.textContent = `Welcome, ${nameInput.value.trim()}! You have been registered.`;
   successMsg.classList.remove('hidden');
 
-  // Auto-hide success after 4 seconds
   setTimeout(() => {
     successMsg.classList.add('hidden');
   }, 4000);
 
-  // Reset the form
   form.reset();
 }
 
-// ---------------------------------------------------------
-// 7. Update the member counter
-// ---------------------------------------------------------
 function updateCounter() {
-  // Count only real member items (ignore the empty note)
   const members = memberList.querySelectorAll('.member-item');
   countSpan.textContent = members.length;
 
-  // Show empty note again if list becomes empty
   if (members.length === 0 && emptyNote) {
     emptyNote.classList.remove('hidden');
   }
 }
 
-// ---------------------------------------------------------
-// 9. Remove a member
-// ---------------------------------------------------------
 function removeMember(li) {
   li.remove();
   updateCounter();
@@ -246,9 +233,7 @@ function removeMember(li) {
 // 3. Capture the form submission
 // ---------------------------------------------------------
 form.addEventListener('submit', function (e) {
-  e.preventDefault();                 // stop page reload
-
-  // Clear any previous success message
+  e.preventDefault();
   successMsg.classList.add('hidden');
 
   if (validateForm()) {
@@ -262,7 +247,6 @@ form.addEventListener('submit', function (e) {
 themeBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark');
 
-  // Update button text
   if (document.body.classList.contains('dark')) {
     themeBtn.textContent = 'Light Mode';
   } else {
